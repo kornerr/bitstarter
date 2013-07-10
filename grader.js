@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 var cheerio = require('cheerio');
-var fs = require('fs');
+var fs      = require('fs');
 var program = require('commander');
-var rest = require('restler');
+var rest    = require('restler');
+var util    = require('util');
 
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
@@ -47,9 +48,19 @@ function checkHTML(doc, checksFile)
     return out;
 }
 
+function checkHTMLFile(htmlFile, checksFile)
+{
+    return checkHTML(cheerioHTMLFile(htmlFile), checksFile);
+}
+
 function clone(fn)
 {
     return fn.bind({});
+}
+
+function printResult(json)
+{
+    console.log(JSON.stringify(json, null, 4));
 }
 
 if (require.main == module)
@@ -63,10 +74,25 @@ if (require.main == module)
                 "Path to index.html",
                 clone(assertFileExists),
                 HTMLFILE_DEFAULT)
+        .option("--url <URL>",
+                "URL to retrieve")
         .parse(process.argv);
-    var checkJSON = checkHTML(cheerioHTMLFile(program.file), program.checks);
-    var outJSON = JSON.stringify(checkJSON, null, 4);
-    console.log(outJSON);
+    if (program.url != null)
+    {
+        rest.get(program.url).on('complete',
+                                 function(result, response)
+                                 {
+                                     if (result instanceof Error) {
+                                         console.error('Error: ' + util.format(response.message));
+                                     } else {
+                                         printResult(checkHTML(cheerioHTMLString(result), program.checks));
+                                     }
+                                 });
+    }
+    else
+    {
+        printResult(checkHTMLFile(program.file, program.checks));
+    }
 }
 else
 {
