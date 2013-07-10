@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
+var cheerio = require('cheerio');
 var fs = require('fs');
 var program = require('commander');
-var cheerio = require('cheerio');
+var rest = require('restler');
 
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
@@ -23,14 +24,19 @@ function cheerioHTMLFile(fileName)
     return cheerio.load(fs.readFileSync(fileName));
 }
 
+function cheerioHTMLString(line)
+{
+    return cheerio.load(line);
+}
+
 function loadChecks(fileName)
 {
     return JSON.parse(fs.readFileSync(fileName));
 }
 
-function checkHTMLFile(htmlFile, checksFile)
+function checkHTML(doc, checksFile)
 {
-    $ = cheerioHTMLFile(htmlFile);
+    $ = doc;
     var checks = loadChecks(checksFile).sort();
     var out = { }
     for (var i in checks)
@@ -58,7 +64,7 @@ if (require.main == module)
                 clone(assertFileExists),
                 HTMLFILE_DEFAULT)
         .parse(process.argv);
-    var checkJSON = checkHTMLFile(program.file, program.checks);
+    var checkJSON = checkHTML(cheerioHTMLFile(program.file), program.checks);
     var outJSON = JSON.stringify(checkJSON, null, 4);
     console.log(outJSON);
 }
