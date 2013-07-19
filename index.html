@@ -13,6 +13,23 @@
                 body {
                     padding-top: 60px;
                 }
+                .linediv-l {
+                    border-right: 1px white solid;
+                }
+                .linediv-r {
+                    border-left: 1px white solid;
+                }
+            }
+            @media(max-width: 480px) {
+                .copy {
+                    padding: 2.5% 10%;
+                }
+                .linediv-l {
+                    border-bottom: 1px white solid;
+                }
+                .linediv-r {
+                    border-top: 1px white solid;
+                }
             }
             
             body {
@@ -27,22 +44,25 @@
                 font-size: 24px;
                 line-height: 30px;
             }
-            .container {
-                width: 960px;
+            p {
+                font-size: 18px;
+                line-height: 24px;
             }
-            .navigation, .pitch, .section1, .section2, .faq, .footer {
-                padding: 10px 0px 10px 0px;
+            .pitch {
+                padding: 2.5% 0%;
             }
-            .video, .thermometer, .order, .social {
-                border: 1px dotted;
+            .order {
+                padding: 2% 0%;
+            }
+            .actions {
+                background-color: #343434;
+                padding: 3% 0%;
+            }
+            .video, .thermometer, .order, .social, .statistics {
                 text-align: center;
             }
-            .video {
-                height: 124px;
-                line-height: 124px;
-            }
-            div.row {
-                border: 1px solid;
+            .statistics h3, .statistics p {
+                color: white;
             }
         </style>
     </head>
@@ -77,6 +97,12 @@
                     <p class="lead">One sentence description.</p>
                 </div>
             </div>
+            <div class="row-fluid pitch">
+                <div class="span5 offset1 video">
+                    <img class="img-polaroid" src="http://placehold.it/480x300">
+                </div>
+            </div>
+
             <div class="row navigation">
                 <div class="span2 logo">
                     Logo
